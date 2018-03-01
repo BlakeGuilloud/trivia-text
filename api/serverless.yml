@@ -11,5 +11,5 @@ provider:
 functions:
   sendQuestion:
     handler: sendQuestion.handler
-    # events:
-    #   - schedule: cron(0 12 1 * ? *)
+    events:
+      - schedule: cron(0 12 * * ? *)
