@@ -1,0 +1,15 @@
+service: trivia-text
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  environment:
+    ACCOUNT_SID: ${file(./config.json):ACCOUNT_SID}
+    ACCOUNT_TOKEN: ${file(./config.json):ACCOUNT_TOKEN}
+    FROM_NUMBER: ${file(./config.json):FROM_NUMBER}
+
+functions:
+  sendQuestion:
+    handler: sendQuestion.handler
+    # events:
+    #   - schedule: cron(0 12 1 * ? *)
