@@ -1,15 +1,22 @@
 'use strict';
 
-const axios = require('axios');
 const { handleError, handleSuccess, tryParse } = require('serverless-helpers/responses');
 const he = require('he');
 
 const sendMessage = require('./utils/sendMessage');
+const getQuestion = require('./utils/getQuestion');
 
 module.exports.handler = (event, context, callback) => {
-  return axios.get('https://opentdb.com/api.php?amount=1&type=multiple')
-    .then(({ data}) => data.results[0])
-    .then(({ question }) => sendMessage({ to: '+18438126962', body: he.decode(question) }))
+  return getQuestion()
+    .then(shapeDataForTwilio)
+    .then(({ body }) => sendMessage({ to: '+18438126962', body }))
     .then(() => callback(null, handleSuccess('Question sent successfully')))
     .catch(err => callback(null, handleError(err)));
 };
+
+function shapeDataForTwilio(data) {
+  return {
+    to: '+18438126962',
+    body: `${data.body} \n${data.options.join('\n')}`
+  }
+}
